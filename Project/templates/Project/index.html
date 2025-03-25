@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project</title>
+</head>
+<body>
+    <h1>Student Data</h1>
+    <table border="1">
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Contact</th>
+          <th>Semester</th>
+          <th>Actions</th> 
+        </tr>
+
+        {% for student in data %}
+        <tr>
+          <td>{{ student.id }}</td>
+          <td>{{ student.name }}</td>
+          <td>{{ student.address }}</td>
+          <td>{{ student.contact }}</td>
+          <td>{{ student.semester }}</td>
+          <td>
+            <a href="{% url 'update' student.id %}"><button>Edit</button></a>
+            <a href="{% url 'deleteStudent' student.id %}" onclick="return confirm('Are you sure you want to delete this student?');">
+                <button>Delete</button>
+            </a>
+        </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+
+    <a href="{% url 'insert' %}">
+        <button>Add New User</button>
+    </a>
+
+</body>
+</html>
