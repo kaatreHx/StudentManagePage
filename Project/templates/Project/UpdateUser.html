@@ -8,7 +8,7 @@
 <body>
     <h1>Update Student</h1>
 
-    <form method="POST" action="{% url 'update' student.id %}">
+    <form method="POST" action="{% url 'update' student.id %}" enctype="multipart/form-data">
         {% csrf_token %}
 
         <label for="name">Name:</label>
@@ -22,6 +22,18 @@
 
         <label for="semester">Semester:</label>
         <input type="text" id="semester" name="semester" value="{{ student.semester }}" required><br><br>
+
+        <label for="profilePic">Current Profile Pic:</label><br>
+        {% if student.profilePic %}
+            <img src="{{ student.profilePic.url }}" alt="Profile Picture" width="150" 
+                style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover;">
+            <br><br>
+        {% else %}
+            <p>No profile picture uploaded.</p>
+        {% endif %}
+
+        <label for="profilePic">Upload New Profile Pic:</label>
+        <input type="file" id="profilePic" name="profilePic"><br><br>
 
         <button type="submit">Update</button>
     </form>

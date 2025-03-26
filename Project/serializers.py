@@ -7,6 +7,7 @@ class StudentDataSerializer(serializers.Serializer):
     address = serializers.CharField(max_length=50)
     contact = serializers.IntegerField()
     semester = serializers.CharField(max_length=50)
+    profilePic = serializers.ImageField(required=False)
 
     def create(self, validate_data):
         return StudentData.objects.create(**validate_data)
@@ -19,6 +20,9 @@ class StudentDataSerializer(serializers.Serializer):
         instance.address = validated_data.get('address', instance.address)
         instance.contact = validated_data.get('contact', instance.contact)
         instance.semester = validated_data.get('semester', instance.semester)
+
+        if 'profilePic' in validated_data:
+            instance.profilePic = validated_data['profilePic']
 
         instance.save()  # Save the updated instance to the database
         return instance

@@ -9,7 +9,7 @@
     <h1>Add New Student</h1>
 
     <!-- Add CSRF Token for security -->
-    <form method="POST" action="{% url 'insert' %}">
+    <form method="POST" action="{% url 'insert' %}" enctype="multipart/form-data">
         {% csrf_token %}
 
         <label for="name">Name:</label>
@@ -23,6 +23,8 @@
 
         <label for="semester">Semester:</label>
         <input type="text" id="semester" name="semester" required><br><br>
+
+        <input type="file" name="profilePic" placeholder="Profile Picture">
 
         <button type="submit">Register</button>
     </form>

@@ -18,13 +18,15 @@ def insert(request):
         address = request.POST.get('address')
         contact = request.POST.get('contact')
         semester = request.POST.get('semester')
+        profilePic = request.FILES.get('profilePic', None)
 
         # Create a dictionary from the POST data
         pythDic = {
             "name": name,
             "address": address,
             "contact": contact,
-            "semester": semester
+            "semester": semester,
+            "profilePic": profilePic
         }
 
         serializeData = StudentDataSerializer(data=pythDic)
@@ -38,33 +40,40 @@ def insert(request):
     return render(request, "Project/User.html")
 
 def update(request, id):
-
     studentData = StudentData.objects.get(id=id)
 
     if request.method == "POST":
-    
         name = request.POST.get('name')
         address = request.POST.get('address')
         contact = request.POST.get('contact')
         semester = request.POST.get('semester')
+        profilePic = request.FILES.get('profilePic', None)  # Correct way to handle file
 
+        # Prepare dictionary for serializer (without profilePic)
         pythDic = {
             "name": name,
             "address": address,
             "contact": contact,
-            "semester": semester
+            "semester": semester,
         }
 
-        serializeData = StudentDataSerializer(studentData, data=pythDic)
+        # Serialize data without profilePic
+        serializeData = StudentDataSerializer(studentData, data=pythDic, partial=True)
         if serializeData.is_valid():
-            serializeData.save()  
+            serializeData.save()
+
+            # Only update profilePic if a new file is uploaded
+            if profilePic:
+                studentData.profilePic = profilePic
+                studentData.save()
+
             return redirect('showList')
         else:
             error = JSONRenderer().render(serializeData.errors)
             return HttpResponse(error, content_type='application/json')
 
-
     return render(request, "Project/UpdateUser.html", {'student': studentData})
+
 
 def allData(request):
     allData = StudentData.objects.all()
@@ -82,3 +91,14 @@ def deleteStudent(request, id):
     student_delete.delete()
     return redirect('showList')
 
+def searchData(request):
+    if request.method == "POST":
+        name = request.POST.get('name', '').strip() 
+
+        if not name:
+            all_students = StudentData.objects.all()
+        else:
+            all_students = StudentData.objects.filter(name__icontains=name) 
+
+        serializedData = StudentDataSerializer(all_students, many=True)  
+        return render(request, "Project/index.html", context={'data': serializedData.data})

@@ -17,13 +17,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Project.views import *
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
+    
     path('admin/', admin.site.urls),
     path('insert/', insert, name="insert"),
     path('update/<int:id>', update, name="update"),
     path('showList', allData, name="showList"),
     path('student/<int:id>', studentData),
     path('studentDelete/<int:id>', deleteStudent, name="deleteStudent"),
-    path('landingPage', renderPage)
-    ]
+    path('landingPage', renderPage),
+    path('searchData', searchData, name="searchData")
+
+    ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
